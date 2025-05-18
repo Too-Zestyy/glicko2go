@@ -1,6 +1,7 @@
 package glicko2go
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -14,7 +15,7 @@ var (
 	gameOutcomes       = []float64{GAME_OUTCOME_WIN, GAME_OUTCOME_LOSS, GAME_OUTCOME_LOSS}
 )
 
-func calculateExampleWithoutPlayerStructs() (float64, float64, float64) {
+func calculateExampleWithoutPlayerStructs() (float64, float64, float64, error) {
 	var g2Ratings []float64
 	var g2Deviations []float64
 
@@ -27,10 +28,15 @@ func calculateExampleWithoutPlayerStructs() (float64, float64, float64) {
 		GlickoRatingToGlicko2(playerRating),
 		GlickoDeviationToGlicko2(playerDeviation),
 		GLICKO2_DEFAULT_PLAYER_VOLATILITY,
-		g2Ratings, g2Deviations, gameOutcomes)
+		g2Ratings, g2Deviations, gameOutcomes,
+		Glicko2AlgorithmSettings{
+			SystemConstant:       GLICKO2_DEFAULT_SYSTEM_CONSTANT,
+			ConvergenceTolerance: GLICKO2_DEFAULT_CONVERGENCE_TOLERANCE,
+		},
+	)
 }
 
-func calculateExampleWithPlayerStructs() (float64, float64, float64) {
+func calculateExampleWithPlayerStructs() (Glicko2Player, error) {
 	playerToUpdate := ConvertToDefaultGlicko2(GlickoPlayer{
 		Rating:          playerRating,
 		RatingDeviation: playerDeviation,
@@ -52,18 +58,31 @@ func calculateExampleWithPlayerStructs() (float64, float64, float64) {
 
 // TODO: Add tests for conversions and basic rating calculations
 
-func TestGlicko2Methods(t *testing.T) {
-	dRating, dDeviation, dVolatility := calculateExampleWithoutPlayerStructs()
-	sRating, sDeviation, sVolatility := calculateExampleWithPlayerStructs()
+func TestGlicko2CalculationMethodsMatch(t *testing.T) {
+	dRating, dDeviation, dVolatility, noStructError := calculateExampleWithoutPlayerStructs()
+	updatedPlayer, structError := calculateExampleWithPlayerStructs()
 
-	if dRating != sRating {
-		t.Errorf("Ratings do not match when using structs vs without: Struct rating: %v, No-struct rating: %v", sRating, dRating)
+	if noStructError != nil {
+		t.Fatal(noStructError)
 	}
-	if dDeviation != sDeviation {
-		t.Errorf("Deviations do not match when using structs vs without: Struct deviation: %v, No-struct deviation: %v", sRating, dRating)
+	if structError != nil {
+		t.Fatal(structError)
 	}
-	if dVolatility != sVolatility {
-		t.Errorf("Volatilities do not match when using structs vs without: Struct volatility: %v, No-struct volatility: %v", sRating, dRating)
+
+	if dRating != updatedPlayer.Rating {
+		t.Errorf("Ratings do not match when using structs vs without: Struct rating: %v, No-struct rating: %v", updatedPlayer.Rating, dRating)
 	}
+	if dDeviation != updatedPlayer.RatingDeviation {
+		t.Errorf("Deviations do not match when using structs vs without: Struct deviation: %v, No-struct deviation: %v", updatedPlayer.RatingDeviation, dDeviation)
+	}
+	if dVolatility != updatedPlayer.RatingVolatility {
+		t.Errorf("Volatilities do not match when using structs vs without: Struct volatility: %v, No-struct volatility: %v", updatedPlayer.RatingVolatility, dVolatility)
+	}
+
+	fmt.Printf("Updated player via structs - Rating: %v, Deviation: %v, Volatility: %v\n",
+		Glicko2RatingtoGlicko(updatedPlayer.Rating),
+		Glicko2DeviationToGlicko(updatedPlayer.RatingDeviation),
+		updatedPlayer.RatingVolatility,
+	)
 
 }
