@@ -18,7 +18,7 @@ type Glicko2AlgorithmSettings struct {
 	ConvergenceTolerance float64
 }
 
-type Glicko2MatchSet struct {
+type Glicko2PlayerPeriodMatches struct {
 	Opponents []Glicko2Player
 	Results   []float64
 }

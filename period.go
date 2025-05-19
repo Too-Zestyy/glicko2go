@@ -2,7 +2,7 @@ package glicko2go
 
 // TODO: Add function that allows for matches to be direct assignment of players instead of IDs
 
-func Glicko2PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func(
+func PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func(
 	players map[int]Glicko2Player,
 	matches []Glicko2MatchByID) (map[int]Glicko2Player, error) {
 
@@ -13,7 +13,7 @@ func Glicko2PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func
 		updatedPlayers := make(map[int]Glicko2Player)
 
 		// Should be faster than looping through all matches per player
-		matchLists := make(map[int]Glicko2MatchSet)
+		matchLists := make(map[int]Glicko2PlayerPeriodMatches)
 		for _, match := range matches {
 
 			// Add the original match to player 1's match list
@@ -23,7 +23,7 @@ func Glicko2PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func
 
 				matchLists[match.Player1ID] = p1List
 			} else {
-				matchLists[match.Player1ID] = Glicko2MatchSet{
+				matchLists[match.Player1ID] = Glicko2PlayerPeriodMatches{
 					Opponents: []Glicko2Player{players[match.Player2ID]},
 					Results:   []float64{match.Result},
 				}
@@ -36,15 +36,15 @@ func Glicko2PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func
 
 				matchLists[match.Player2ID] = p2List
 			} else {
-				matchLists[match.Player1ID] = Glicko2MatchSet{
-					Opponents: []Glicko2Player{players[match.Player2ID]},
+				matchLists[match.Player2ID] = Glicko2PlayerPeriodMatches{
+					Opponents: []Glicko2Player{players[match.Player1ID]},
 					Results:   []float64{1 - match.Result},
 				}
 			}
 		}
 
 		for playerID, player := range players {
-			playerMatchList := Glicko2MatchSet{}
+			playerMatchList := Glicko2PlayerPeriodMatches{}
 			if filledMatchList, ok := matchLists[playerID]; ok {
 				playerMatchList = filledMatchList
 			}
@@ -63,8 +63,8 @@ func Glicko2PeriodCalculatorWithSettings(settings Glicko2AlgorithmSettings) func
 	}
 }
 
-func DefaultGlicko2PeriodCalculator() func(
+func DefaultPeriodCalculator() func(
 	players map[int]Glicko2Player,
 	matches []Glicko2MatchByID) (map[int]Glicko2Player, error) {
-	return Glicko2PeriodCalculatorWithSettings(glicko2DefaultSettings)
+	return PeriodCalculatorWithSettings(glicko2DefaultSettings)
 }
