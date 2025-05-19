@@ -17,3 +17,14 @@ type Glicko2AlgorithmSettings struct {
 	SystemConstant       float64
 	ConvergenceTolerance float64
 }
+
+type Glicko2MatchSet struct {
+	Opponents []Glicko2Player
+	Results   []float64
+}
+
+type Glicko2MatchByID struct {
+	Player1ID int
+	Player2ID int
+	Result    float64
+}
