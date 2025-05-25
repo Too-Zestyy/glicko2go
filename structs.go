@@ -28,3 +28,8 @@ type Glicko2MatchByID struct {
 	Player2ID int
 	Result    float64
 }
+
+type Glicko2MatchForPlayer struct {
+	Opponent Glicko2Player
+	Result   float64
+}

@@ -1,7 +1,6 @@
 package glicko2go
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -78,11 +77,5 @@ func TestGlicko2CalculationMethodsMatch(t *testing.T) {
 	if dVolatility != updatedPlayer.RatingVolatility {
 		t.Errorf("Volatilities do not match when using structs vs without: Struct volatility: %v, No-struct volatility: %v", updatedPlayer.RatingVolatility, dVolatility)
 	}
-
-	fmt.Printf("Updated player via structs - Rating: %v, Deviation: %v, Volatility: %v\n",
-		Glicko2RatingtoGlicko(updatedPlayer.Rating),
-		Glicko2DeviationToGlicko(updatedPlayer.RatingDeviation),
-		updatedPlayer.RatingVolatility,
-	)
 
 }

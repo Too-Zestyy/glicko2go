@@ -261,3 +261,23 @@ func PlayerUpdaterWithDefaultSettings() func(player Glicko2Player,
 	opponents []Glicko2Player, gameOutcomes []float64) (Glicko2Player, error) {
 	return PlayerUpdaterWithSettings(glicko2DefaultSettings)
 }
+
+func NewPlayerUpdaterWithSettings(settings Glicko2AlgorithmSettings) func(player Glicko2Player, periodGames []Glicko2MatchForPlayer) (Glicko2Player, error) {
+
+	return func(player Glicko2Player, periodGames []Glicko2MatchForPlayer) (Glicko2Player, error) {
+		playerUpdater := RawPlayerUpdaterWithSettings(settings)
+
+		var opponentRatings []float64
+		var opponentDeviations []float64
+		// TODO: Be more consistent with usage of game result vs outcome
+		var gameResults []float64
+
+		for _, game := range periodGames {
+			opponentRatings = append(opponentRatings, game.Opponent.Rating)
+			opponentDeviations = append(opponentDeviations, game.Opponent.RatingDeviation)
+			gameResults = append(gameResults, game.Result)
+		}
+
+		return playerUpdater(player.Rating, player.RatingDeviation, player.RatingVolatility, opponentRatings, opponentDeviations, gameResults)
+	}
+}
