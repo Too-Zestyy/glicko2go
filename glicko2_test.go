@@ -36,7 +36,7 @@ func calculateExampleWithoutPlayerStructs() (float64, float64, float64, error) {
 }
 
 func calculateExampleWithPlayerStructs() (Glicko2Player, error) {
-	playerToUpdate := ConvertToDefaultGlicko2(GlickoPlayer{
+	playerToUpdate := ConvertToGlicko2WithDefaultVolatility(GlickoPlayer{
 		Rating:          playerRating,
 		RatingDeviation: playerDeviation,
 	})
@@ -44,7 +44,7 @@ func calculateExampleWithPlayerStructs() (Glicko2Player, error) {
 	var opponents []Glicko2Player
 
 	for i := 0; i < len(opponentRatings); i++ {
-		opponents = append(opponents, ConvertToDefaultGlicko2(GlickoPlayer{
+		opponents = append(opponents, ConvertToGlicko2WithDefaultVolatility(GlickoPlayer{
 			Rating:          opponentRatings[i],
 			RatingDeviation: opponentDeviations[i],
 		}))

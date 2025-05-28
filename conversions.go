@@ -1,9 +1,5 @@
 package glicko2go
 
-const (
-	GLICKO2_DEFAULT_PLAYER_VOLATILITY float64 = 0.06
-)
-
 func GlickoRatingToGlicko2(gRating float64) float64 {
 	return (gRating - 1500) / 173.7178
 }
@@ -30,11 +26,11 @@ func ConvertToGlicko2(gp GlickoPlayer, volatility float64) Glicko2Player {
 	}
 }
 
-func ConvertToDefaultGlicko2(gp GlickoPlayer) Glicko2Player {
+func ConvertToGlicko2WithDefaultVolatility(gp GlickoPlayer) Glicko2Player {
 	return ConvertToGlicko2(gp, GLICKO2_DEFAULT_PLAYER_VOLATILITY)
 }
 
-func ConvertToGlicko1(g2p Glicko2Player) GlickoPlayer {
+func ConvertToGlicko(g2p Glicko2Player) GlickoPlayer {
 	return GlickoPlayer{
 		Rating:          Glicko2RatingtoGlicko(g2p.Rating),
 		RatingDeviation: Glicko2DeviationToGlicko(g2p.RatingDeviation),
