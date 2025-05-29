@@ -44,7 +44,45 @@ Glicko Player within glicko 2 scale:
 	- Volatility: 0.06
 ```
 
-Functions that provide reasonable shorthands and defaults for a variety of values are provided. 
+Functions that provide reasonable shorthands and defaults for a variety of values are provided, in addition to conversions between Glicko and Glicko 2:
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/Too-Zestyy/glicko2go"
+)
+
+func main() {
+	glicko2Player := glicko2go.NewDefaultGlicko2Player()
+
+	fmt.Printf(
+		"Default Glicko 2 Player\n"+
+			"	- Rating: %v\n"+
+			"	- Rating Deviation: %v\n"+
+			"	- Volatility: %v\n",
+		glicko2Player.Rating, glicko2Player.RatingDeviation, glicko2Player.RatingVolatility)
+
+	fmt.Println("--------------------")
+
+	glickoPlayer := glicko2go.ConvertToGlicko(glicko2Player)
+
+	fmt.Printf("Default Glicko 2 Player on Glicko scale: \n"+
+		"	- Rating: %v\n"+
+		"	- Rating Deviation: %v\n",
+		glickoPlayer.Rating, glickoPlayer.RatingDeviation)
+}
+```
+```
+Default Glicko 2 Player
+	- Rating: 0
+	- Rating Deviation: 2.014761872416068
+	- Volatility: 0.06
+--------------------
+Default Glicko 2 Player on Glicko scale: 
+	- Rating: 1500
+	- Rating Deviation: 350
+```
 
 ## Period Updaters
 
