@@ -5,6 +5,47 @@
 ---
 # Usage
 
+## Players
+
+Players within this package are represented by `GlickoPlayer` and `Glicko2Player`, and can be converted between.
+
+To create a Glicko 2 player that has a Glicko Rating of 2000 and Glicko Rating Deviation of 100:
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/Too-Zestyy/glicko2go"
+)
+
+func main() {
+	glickoPlayer := glicko2go.GlickoPlayer{
+		Rating:          2000,
+		RatingDeviation: 100,
+	}
+
+	glicko2Player := glicko2go.ConvertToGlicko2(
+		glickoPlayer,
+		glicko2go.GLICKO2_DEFAULT_PLAYER_VOLATILITY, // Or whatever volatility value is best for your system
+	)
+
+	fmt.Printf("Glicko Player within glicko 2 scale:\n"+
+		"	- Rating: %v\n"+
+		"	- Rating Deviation: %v\n"+
+		"	- Volatility: %v\n",
+		glicko2Player.Rating, glicko2Player.RatingDeviation, glicko2Player.RatingVolatility,
+	)
+}
+```
+```
+Glicko Player within glicko 2 scale:
+	- Rating: 2.878231246308668
+	- Rating Deviation: 0.5756462492617337
+	- Volatility: 0.06
+```
+
+Functions that provide reasonable shorthands and defaults for a variety of values are provided. 
+
 ## Period Updaters
 
 For common use-cases such as a full-stack application with a database storing player stats, period updaters can abstract calculating updates for players over a period, including those who have not played within a period. Either `DefaultPeriodCalculator` or `PeriodCalculatorWithSettings` will be suitable, depending on if you want to use the same constants as within the paper's example.
@@ -166,7 +207,6 @@ func main() {
 
 }
 ```
-
 ```
 Player after period: 
 	- Rating: 1464.0506705393013
