@@ -4,7 +4,7 @@ func GlickoRatingToGlicko2(gRating float64) float64 {
 	return (gRating - 1500) / 173.7178
 }
 
-func Glicko2RatingtoGlicko(g2Rating float64) float64 {
+func Glicko2RatingToGlicko(g2Rating float64) float64 {
 	return g2Rating*173.7178 + 1500
 }
 
@@ -32,7 +32,7 @@ func ConvertToGlicko2WithDefaultVolatility(gp GlickoPlayer) Glicko2Player {
 
 func ConvertToGlicko(g2p Glicko2Player) GlickoPlayer {
 	return GlickoPlayer{
-		Rating:          Glicko2RatingtoGlicko(g2p.Rating),
+		Rating:          Glicko2RatingToGlicko(g2p.Rating),
 		RatingDeviation: Glicko2DeviationToGlicko(g2p.RatingDeviation),
 	}
 }
