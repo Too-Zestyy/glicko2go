@@ -166,6 +166,7 @@ func main() {
 
 }
 ```
+
 ```
 Player after period: 
 	- Rating: 1464.0506705393013
